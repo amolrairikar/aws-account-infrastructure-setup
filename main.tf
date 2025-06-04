@@ -15,5 +15,5 @@ module "sns_email_subscription" {
   sns_topic_name = "lambda-failure-notification-topic"
   user_email     = var.email
   environment    = var.environment
-  project        = var.project
+  project        = var.project_name
 }
