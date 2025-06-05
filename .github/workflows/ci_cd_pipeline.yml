@@ -14,6 +14,7 @@ jobs:
     env:
       S3_STATE_BUCKET_NAME: ${{ secrets.S3_STATE_BUCKET_NAME }}
       TF_VAR_infra_role_arn: ${{ secrets.TF_VAR_infra_role_arn }}
+      TF_VAR_terraform_user_arn: ${{ secrets.TF_VAR_terraform_user_arn }}
       TF_VAR_email: ${{ secrets.EMAIL }}
       TF_VAR_environment: "prod"
       TF_VAR_project_name: "accountSetup"
