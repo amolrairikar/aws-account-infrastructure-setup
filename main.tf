@@ -87,7 +87,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:PutBucketPublicAccessBlock",
       "s3:GetBucketPublicAccessBlock",
       "s3:PutBucketNotification",
-      "s3:GetBucketNotification"
+      "s3:GetBucketNotification",
+      "s3:GetObject",
+      "s3:ListBucket"
     ]
     resources = ["*"]
   }
