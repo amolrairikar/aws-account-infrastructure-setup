@@ -105,7 +105,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:GetBucketRequestPayment",
       "s3:GetBucketLogging",
       "s3:GetLifecycleConfiguration",
-      "s3:GetReplicationConfiguration"
+      "s3:GetReplicationConfiguration",
+      "s3:GetEncryptionConfiguration"
     ]
     resources = ["*"]
   }
