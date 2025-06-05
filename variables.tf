@@ -17,3 +17,8 @@ variable "project_name" {
   description = "The project name"
   type        = string
 }
+
+variable "terraform_user_arn" {
+  description = "The ARN for the Terraform user who will assume the infra role"
+  type        = string
+}
