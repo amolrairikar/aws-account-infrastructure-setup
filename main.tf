@@ -52,7 +52,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "iam:TagPolicy",
       "iam:UntagPolicy",
       "iam:AttachRolePolicy",
-      "iam:DetachRolePolicy"
+      "iam:DetachRolePolicy",
+      "iam:ListRolePolicies"
     ]
     resources = ["*"]
   }
@@ -105,7 +106,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "sns:Subscribe",
       "sns:Unsubscribe",
       "sns:GetSubscriptionAttributes",
-      "sns:SetSubscriptionAttributes"
+      "sns:SetSubscriptionAttributes",
+      "sns:ListTagsForResource"
     ]
     resources = ["*"]
   }
