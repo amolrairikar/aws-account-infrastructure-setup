@@ -53,7 +53,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "iam:UntagPolicy",
       "iam:AttachRolePolicy",
       "iam:DetachRolePolicy",
-      "iam:ListRolePolicies"
+      "iam:ListRolePolicies",
+      "iam:ListAttachedRolePolicies"
     ]
     resources = ["*"]
   }
