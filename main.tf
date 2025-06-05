@@ -54,7 +54,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "iam:AttachRolePolicy",
       "iam:DetachRolePolicy",
       "iam:ListRolePolicies",
-      "iam:ListAttachedRolePolicies"
+      "iam:ListAttachedRolePolicies",
+      "iam:CreatePolicyVersion"
     ]
     resources = ["*"]
   }
@@ -93,7 +94,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:GetBucketNotification",
       "s3:GetObject",
       "s3:ListBucket",
-      "s3:GetBucketPolicy"
+      "s3:GetBucketPolicy",
+      "s3:PutObject"
     ]
     resources = ["*"]
   }
