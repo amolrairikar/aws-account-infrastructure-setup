@@ -76,7 +76,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:AddPermission",
       "lambda:RemovePermission",
       "lambda:GetPolicy",
-      "lambda:ListVersionsByFunction"
+      "lambda:ListVersionsByFunction",
+      "lambda:GetFunctionCodeSigningConfig"
     ]
     resources = ["*"]
   }
@@ -96,7 +97,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:GetObject",
       "s3:ListBucket",
       "s3:GetBucketPolicy",
-      "s3:PutObject"
+      "s3:PutObject",
+      "s3:GetBucketAcl"
     ]
     resources = ["*"]
   }
