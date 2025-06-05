@@ -99,7 +99,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:GetBucketPolicy",
       "s3:PutObject",
       "s3:GetBucketAcl",
-      "s3:GetBucketCORS"
+      "s3:GetBucketCORS",
+      "s3:GetBucketWebsite"
     ]
     resources = ["*"]
   }
