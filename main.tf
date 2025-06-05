@@ -52,7 +52,11 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "iam:TagPolicy",
       "iam:UntagPolicy",
       "iam:AttachRolePolicy",
-      "iam:DetachRolePolicy"
+      "iam:DetachRolePolicy",
+      "iam:ListRolePolicies",
+      "iam:ListAttachedRolePolicies",
+      "iam:CreatePolicyVersion",
+      "iam:DeletePolicyVersion"
     ]
     resources = ["*"]
   }
@@ -71,7 +75,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:GetFunctionEventInvokeConfig",
       "lambda:AddPermission",
       "lambda:RemovePermission",
-      "lambda:GetPolicy"
+      "lambda:GetPolicy",
+      "lambda:ListVersionsByFunction",
+      "lambda:GetFunctionCodeSigningConfig"
     ]
     resources = ["*"]
   }
@@ -87,7 +93,21 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:PutBucketPublicAccessBlock",
       "s3:GetBucketPublicAccessBlock",
       "s3:PutBucketNotification",
-      "s3:GetBucketNotification"
+      "s3:GetBucketNotification",
+      "s3:GetObject",
+      "s3:ListBucket",
+      "s3:GetBucketPolicy",
+      "s3:PutObject",
+      "s3:GetBucketAcl",
+      "s3:GetBucketCORS",
+      "s3:GetBucketWebsite",
+      "s3:GetAccelerateConfiguration",
+      "s3:GetBucketRequestPayment",
+      "s3:GetBucketLogging",
+      "s3:GetLifecycleConfiguration",
+      "s3:GetReplicationConfiguration",
+      "s3:GetEncryptionConfiguration",
+      "s3:GetBucketObjectLockConfiguration"
     ]
     resources = ["*"]
   }
@@ -103,7 +123,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "sns:Subscribe",
       "sns:Unsubscribe",
       "sns:GetSubscriptionAttributes",
-      "sns:SetSubscriptionAttributes"
+      "sns:SetSubscriptionAttributes",
+      "sns:ListTagsForResource"
     ]
     resources = ["*"]
   }

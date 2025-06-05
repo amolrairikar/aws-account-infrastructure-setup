@@ -47,7 +47,6 @@ jobs:
           terraform plan -out=tfplan
 
       - name: Apply Terraform
-        if: github.ref == 'refs/heads/main'
         run: |
           echo "Applying Terraform configuration..."
           terraform apply -auto-approve tfplan
