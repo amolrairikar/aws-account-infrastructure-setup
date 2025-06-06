@@ -32,6 +32,14 @@ data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
       ]
     }
   }
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = "arn:aws:iam::${var.account_number}:assumed-role/infra-role/GitHubActions"
+    }
+  }
 }
 
 data "aws_iam_policy_document" "infra_role_inline_policy_document" {
