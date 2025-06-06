@@ -45,7 +45,7 @@ jobs:
       - name: Import existing OIDC (temporary step)
         run: |
           echo "Importing existing OIDC provider..."
-          terraform import aws_iam_openid_connect_provider.github_oidc_provider token.actions.githubusercontent.com
+          terraform import aws_iam_openid_connect_provider.github_oidc_provider arn:aws:iam::203918855457:oidc-provider/token.actions.githubusercontent.com
 
       - name: Plan Terraform
         run: |
