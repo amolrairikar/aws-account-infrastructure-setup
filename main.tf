@@ -12,11 +12,33 @@ provider "aws" {
 
 data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
   statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+    principals {
+      type        = "Federated"
+      identifiers = ["arn:aws:iam::${var.account_number}:oidc-provider/token.actions.githubusercontent.com"]
+    }
+    condition {
+      test = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+    condition {
+      test = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = [
+        "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/main",
+        "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/feature/*",
+        "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/create_github_oidc_provider"
+      ]
+    }
+  }
+  statement {
     actions = ["sts:AssumeRole"]
     effect  = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [var.terraform_user_arn]
+      identifiers = ["arn:aws:sts::${var.account_number}:assumed-role/infra-role/GitHubActions"]
     }
   }
 }
@@ -56,7 +78,12 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "iam:ListRolePolicies",
       "iam:ListAttachedRolePolicies",
       "iam:CreatePolicyVersion",
-      "iam:DeletePolicyVersion"
+      "iam:DeletePolicyVersion",
+      "iam:ListOpenIDConnectProviders",
+      "iam:ListOpenIDConnectProviderTags",
+      "iam:GetOpenIDConnectProvider",
+      "iam:CreateOpenIDConnectProvider",
+      "iam:TagOpenIDConnectProvider"
     ]
     resources = ["*"]
   }
@@ -171,6 +198,17 @@ module "terraform_role" {
   inline_policy_description = "Policy for Terraform role to manage AWS infrastructure"
   environment               = var.environment
   project                   = var.project_name
+}
+
+resource "aws_iam_openid_connect_provider" "github_oidc_provider" {
+  url = "https://token.actions.githubusercontent.com"
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+  tags = {
+    environment = var.environment
+    project     = var.project_name
+  }
 }
 
 module "sns_email_subscription" {

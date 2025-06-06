@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
 
@@ -14,7 +15,6 @@ jobs:
     env:
       S3_STATE_BUCKET_NAME: ${{ secrets.S3_STATE_BUCKET_NAME }}
       TF_VAR_infra_role_arn: ${{ secrets.TF_VAR_infra_role_arn }}
-      TF_VAR_terraform_user_arn: ${{ secrets.TF_VAR_terraform_user_arn }}
       TF_VAR_email: ${{ secrets.EMAIL }}
       TF_VAR_environment: "prod"
       TF_VAR_project_name: "accountSetup"
@@ -23,11 +23,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
     
-      - name: Set up AWS credentials
+      - name: Set up AWS credentials (using OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.TF_VAR_INFRA_ROLE_ARN }}
           aws-region: 'us-east-2'
       
       - name: Set up Terraform
