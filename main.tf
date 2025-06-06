@@ -200,16 +200,16 @@ module "terraform_role" {
   project                   = var.project_name
 }
 
-# resource "aws_iam_openid_connect_provider" "github_oidc_provider" {
-#   url = "https://token.actions.githubusercontent.com"
-#   client_id_list = [
-#     "sts.amazonaws.com"
-#   ]
-#   tags = {
-#     environment = var.environment
-#     project     = var.project_name
-#   }
-# }
+resource "aws_iam_openid_connect_provider" "github_oidc_provider" {
+  url = "https://token.actions.githubusercontent.com"
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+  tags = {
+    environment = var.environment
+    project     = var.project_name
+  }
+}
 
 module "sns_email_subscription" {
   source         = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/sns-email-subscription?ref=main"
