@@ -200,11 +200,11 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
         }
         Action    = "s3:GetBucketAcl"
         Resource  = module.cloudtrail_bucket.bucket_arn
-        Condition ={
-          StringEquals = {
-            "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
-          }
-        }
+        # Condition ={
+          # StringEquals = {
+            # "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
+          # }
+        # }
       },
       {
         Sid       = "AWSCloudTrailWrite"
@@ -217,7 +217,7 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
         Condition = {
           StringEquals = {
             "s3:x-amz-acl"  = "bucket-owner-full-control"
-            "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
+            # "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
           }
         }
       }
