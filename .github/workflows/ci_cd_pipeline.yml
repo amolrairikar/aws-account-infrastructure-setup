@@ -15,7 +15,6 @@ jobs:
     env:
       S3_STATE_BUCKET_NAME: ${{ secrets.S3_STATE_BUCKET_NAME }}
       TF_VAR_infra_role_arn: ${{ secrets.TF_VAR_infra_role_arn }}
-      TF_VAR_terraform_user_arn: ${{ secrets.TF_VAR_terraform_user_arn }}
       TF_VAR_email: ${{ secrets.EMAIL }}
       TF_VAR_environment: "prod"
       TF_VAR_project_name: "accountSetup"
@@ -42,17 +41,12 @@ jobs:
             -backend-config="region=us-east-2" \
             -backend-config="assume_role={role_arn=\"${TF_VAR_infra_role_arn}\", session_name=\"terraform-session\"}"
 
-      - name: Import existing OIDC (temporary step)
-        run: |
-          echo "Importing existing OIDC provider..."
-          terraform import aws_iam_openid_connect_provider.github_oidc_provider arn:aws:iam::203918855457:oidc-provider/token.actions.githubusercontent.com
-
       - name: Plan Terraform
         run: |
           echo "Planning Terraform configuration..."
           terraform plan -out=tfplan
 
-      #- name: Apply Terraform
-        #run: |
-          #echo "Applying Terraform configuration..."
-          #terraform apply -auto-approve tfplan
+      - name: Apply Terraform
+        run: |
+          echo "Applying Terraform configuration..."
+          terraform apply -auto-approve tfplan
