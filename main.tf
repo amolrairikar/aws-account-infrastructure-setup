@@ -28,7 +28,9 @@ data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
       variable = "token.actions.githubusercontent.com:sub"
       values   = [
         "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/main",
-        "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/feature/*"
+        "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/feature/*",
+        "repo:amolrairikar/spotify-listening-history-app:ref:refs/heads/main",
+        "repo:amolrairikar/spotify-listening-history-app:ref:refs/heads/feature/*"
       ]
     }
   }
