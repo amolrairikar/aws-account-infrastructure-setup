@@ -101,6 +101,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:PutBucketPolicy",
       "s3:GetBucketAcl",
       "s3:PutBucketAcl",
+      "s3:GetBucketOwnershipControls",
+      "s3:PutBucketOwnershipControls",
       "s3:GetBucketCORS",
       "s3:GetBucketWebsite",
       "s3:GetAccelerateConfiguration",
@@ -187,6 +189,7 @@ module "cloudtrail_bucket" {
   project           = var.project_name
   versioning_status = "Disabled"
   bucket_acl        = "private"
+  object_ownership  = "BucketOwnerPreferred"
 }
 
 data "aws_caller_identity" "current" {}
