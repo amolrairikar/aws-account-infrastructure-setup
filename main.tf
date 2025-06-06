@@ -226,7 +226,7 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
 
 resource "aws_cloudtrail" "management_event_trail" {
   name                          = "management-events-trail"
-  s3_bucket_name                = module.cloudtrail_bucket.bucket_name
+  s3_bucket_name                = module.cloudtrail_bucket.bucket_id
   include_global_service_events = true
   is_multi_region_trail         = true
   is_organization_trail         = false
