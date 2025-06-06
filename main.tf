@@ -183,6 +183,7 @@ module "cloudtrail_bucket" {
   environment       = var.environment
   project           = var.project_name
   versioning_status = "Disabled"
+  bucket_acl        = "private"
 }
 
 data "aws_caller_identity" "current" {}
