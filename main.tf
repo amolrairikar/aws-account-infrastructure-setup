@@ -188,6 +188,7 @@ module "cloudtrail_bucket" {
   environment       = var.environment
   project           = var.project_name
   versioning_status = "Disabled"
+  enable_acl        = true
   bucket_acl        = "private"
   object_ownership  = "BucketOwnerPreferred"
 }
