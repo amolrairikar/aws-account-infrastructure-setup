@@ -18,6 +18,7 @@ jobs:
       TF_VAR_email: ${{ secrets.EMAIL }}
       TF_VAR_environment: "prod"
       TF_VAR_project_name: "accountSetup"
+      TF_VAR_account_number: ${{ secrets.AWS_ACCOUNT_NUMBER }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

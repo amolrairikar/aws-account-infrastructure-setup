@@ -95,10 +95,14 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:PutBucketNotification",
       "s3:GetBucketNotification",
       "s3:GetObject",
+      "s3:PutObject",
       "s3:ListBucket",
       "s3:GetBucketPolicy",
-      "s3:PutObject",
+      "s3:PutBucketPolicy",
       "s3:GetBucketAcl",
+      "s3:PutBucketAcl",
+      "s3:GetBucketOwnershipControls",
+      "s3:PutBucketOwnershipControls",
       "s3:GetBucketCORS",
       "s3:GetBucketWebsite",
       "s3:GetAccelerateConfiguration",
@@ -140,6 +144,23 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
     resources = ["*"]
   }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "cloudtrail:CreateTrail",
+      "cloudtrail:UpdateTrail",
+      "cloudtrail:DeleteTrail",
+      "cloudtrail:GetTrail",
+      "cloudtrail:GetTrailStatus",
+      "cloudtrail:DescribeTrails",
+      "cloudtrail:StartLogging",
+      "cloudtrail:StopLogging",
+      "cloudtrail:PutEventSelectors",
+      "cloudtrail:AddTags",
+      "cloudtrail:ListTags"
+    ]
+    resources = ["*"]
+  }
 }
 
 module "terraform_role" {
@@ -158,4 +179,74 @@ module "sns_email_subscription" {
   user_email     = var.email
   environment    = var.environment
   project        = var.project_name
+}
+
+module "cloudtrail_bucket" {
+  source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
+  bucket_name       = "aws-cloudtrail-logs-${var.account_number}-659b67ac"
+  account_number    = var.account_number
+  environment       = var.environment
+  project           = var.project_name
+  versioning_status = "Disabled"
+  bucket_acl        = "private"
+  object_ownership  = "BucketOwnerPreferred"
+}
+
+data "aws_caller_identity" "current" {}
+
+resource "aws_s3_bucket_policy" "cloudtrail" {
+  bucket = module.cloudtrail_bucket.bucket_id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AWSCloudTrailAclCheck"
+        Effect    = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+        Action    = "s3:GetBucketAcl"
+        Resource  = module.cloudtrail_bucket.bucket_arn
+        Condition ={
+          StringEquals = {
+            "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
+          }
+        }
+      },
+      {
+        Sid       = "AWSCloudTrailWrite"
+        Effect    = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+        Action    = "s3:PutObject"
+        Resource  = "${module.cloudtrail_bucket.bucket_arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+        Condition = {
+          StringEquals = {
+            "s3:x-amz-acl"  = "bucket-owner-full-control"
+            "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_cloudtrail" "management_event_trail" {
+  name                          = "management-events-trail"
+  s3_bucket_name                = module.cloudtrail_bucket.bucket_id
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  is_organization_trail         = false
+  
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+  }
+
+  tags = {
+    environment = var.environment
+    project     = var.project_name
+  }
 }
