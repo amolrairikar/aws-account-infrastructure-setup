@@ -159,3 +159,12 @@ module "sns_email_subscription" {
   environment    = var.environment
   project        = var.project_name
 }
+
+module "cloudtrail_bucket" {
+  source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
+  bucket_name       = "aws-cloudtrail-logs-${var.account_number}-659b67ac"
+  account_number    = var.account_number
+  environment       = var.environment
+  project           = var.project_name
+  versioning_status = "Disabled"
+}

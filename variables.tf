@@ -22,3 +22,8 @@ variable "terraform_user_arn" {
   description = "The ARN for the Terraform user who will assume the infra role"
   type        = string
 }
+
+variable "account_number" {
+  description = "The AWS account number"
+  type        = string
+}
