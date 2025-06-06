@@ -140,6 +140,20 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
     resources = ["*"]
   }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "cloudtrail:CreateTrail",
+      "cloudtrail:UpdateTrail",
+      "cloudtrail:DeleteTrail",
+      "cloudtrail:GetTrail",
+      "cloudtrail:GetTrailStatus",
+      "cloudtrail:StartLogging",
+      "cloudtrail:StopLogging",
+      "cloudtrail:PutEventSelectors"
+    ]
+    resources = ["*"]
+  }
 }
 
 module "terraform_role" {
@@ -168,3 +182,62 @@ module "cloudtrail_bucket" {
   project           = var.project_name
   versioning_status = "Disabled"
 }
+
+data "aws_caller_identity" "current" {}
+
+# resource "aws_s3_bucket_policy" "cloudtrail" {
+#   bucket = module.cloudtrail_bucket.bucket_id
+
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Sid       = "AWSCloudTrailAclCheck"
+#         Effect    = "Allow"
+#         Principal = {
+#           Service = "cloudtrail.amazonaws.com"
+#         }
+#         Action    = "s3:GetBucketAcl"
+#         Resource  = module.cloudtrail_bucket.bucket_arn
+#         Condition ={
+#           StringEquals = {
+#             "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
+#           }
+#         }
+#       },
+#       {
+#         Sid       = "AWSCloudTrailWrite"
+#         Effect    = "Allow"
+#         Principal = {
+#           Service = "cloudtrail.amazonaws.com"
+#         }
+#         Action    = "s3:PutObject"
+#         Resource  = "${aws_s3_bucket.cloudtrail.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+#         Condition = {
+#           StringEquals = {
+#             "s3:x-amz-acl"  = "bucket-owner-full-control"
+#             "AWS:SourceARN" = aws_cloudtrail.management_event_trail.arn
+#           }
+#         }
+#       }
+#     ]
+#   })
+# }
+
+# resource "aws_cloudtrail" "management_event_trail" {
+#   name                          = "management-events-trail"
+#   s3_bucket_name                = module.cloudtrail_bucket.bucket_name
+#   include_global_service_events = true
+#   is_multi_region_trail         = true
+#   is_organization_trail         = false
+  
+#   event_selector {
+#     read_write_type           = "All"
+#     include_management_events = true
+#   }
+
+#   tags = {
+#     environment = var.environment
+#     project     = var.project_name
+#   }
+# }
