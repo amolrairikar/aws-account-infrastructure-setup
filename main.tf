@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
     effect  = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.account_number}:assumed-role/infra-role/GitHubActions"]
+      identifiers = ["arn:aws:sts::${var.account_number}:assumed-role/infra-role/GitHubActions"]
     }
   }
 }
