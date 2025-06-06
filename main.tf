@@ -154,7 +154,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "cloudtrail:StartLogging",
       "cloudtrail:StopLogging",
       "cloudtrail:PutEventSelectors",
-      "cloudtrail:AddTags"
+      "cloudtrail:AddTags",
+      "cloudtrail:ListTags"
     ]
     resources = ["*"]
   }
