@@ -30,7 +30,9 @@ data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
         "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/main",
         "repo:amolrairikar/aws-account-infrastructure-setup:ref:refs/heads/feature/*",
         "repo:amolrairikar/spotify-listening-history-app:ref:refs/heads/main",
-        "repo:amolrairikar/spotify-listening-history-app:ref:refs/heads/feature/*"
+        "repo:amolrairikar/spotify-listening-history-app:ref:refs/heads/feature/*",
+        "repo:amolrairikar/cta-train-tracker-analytics:ref:refs/heads/main",
+        "repo:amolrairikar/cta-train-tracker-analytics:ref:refs/heads/feature/*"
       ]
     }
   }
