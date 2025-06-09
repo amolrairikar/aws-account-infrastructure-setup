@@ -200,8 +200,10 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "dynamodb:DeleteTable",
       "dynamodb:DescribeTimeToLive",
       "dynamodb:UpdateTimeToLive",
+      "dynamodb:DescribeContinuousBackups",
       "dynamodb:TagResource",
-      "dynamodb:UntagResource"
+      "dynamodb:UntagResource",
+      "dynamodb:ListTagsOfResource"
     ]
     resources = ["*"]
   }
