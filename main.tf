@@ -191,6 +191,20 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
     resources = ["*"]
   }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "dynamodb:ListTables",
+      "dynamodb:DescribeTable",
+      "dynamodb:CreateTable",
+      "dynamodb:DeleteTable",
+      "dynamodb:DescribeTimeToLive",
+      "dynamodb:UpdateTimeToLive",
+      "dynamodb:TagResource",
+      "dynamodb:UntagResource"
+    ]
+    resources = ["*"]
+  }
 }
 
 module "terraform_role" {
