@@ -321,7 +321,7 @@ module "retry_api_call_layer" {
   source              = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/lambda-layer?ref=main"
   layer_filename      = "retry_exceptions.zip"
   layer_name          = "retry_api_exceptions"
-  description         = "Layer for retrying API calls in Lambda functions"
+  layer_description   = "Layer for retrying API calls in Lambda functions"
   layer_architectures = ["x86_64"]
   layer_runtimes      = ["python3.12"]
 }
