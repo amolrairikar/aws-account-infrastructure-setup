@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 import requests
 import botocore
 
-from layers.retry_exceptions import is_retryable_exception, backoff_on_client_error
+from layers.retry_api_exceptions.retry_api_exceptions import is_retryable_exception, backoff_on_client_error
 
 class TestIsRetryableException(unittest.TestCase):
     """Class for testing is_retryable_exception method."""
