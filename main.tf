@@ -107,7 +107,15 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:RemovePermission",
       "lambda:GetPolicy",
       "lambda:ListVersionsByFunction",
-      "lambda:GetFunctionCodeSigningConfig"
+      "lambda:GetFunctionCodeSigningConfig",
+      "lambda:ListLayers",
+      "lambda:ListLayerVersions",
+      "lambda:GetLayerVersion",
+      "lambda:GetLayerVersionPolicy",
+      "lambda:PublishLayerVersion",
+      "lambda:DeleteLayerVersion",
+      "lambda:AddLayerVersionPermission",
+      "lambda:RemoveLayerVersionPermission"
     ]
     resources = ["*"]
   }
@@ -307,4 +315,13 @@ resource "aws_cloudtrail" "management_event_trail" {
     environment = var.environment
     project     = var.project_name
   }
+}
+
+module "retry_api_call_layer" {
+  source              = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/lambda-layer?ref=main"
+  layer_filename      = "retry_api_exceptions.zip"
+  layer_name          = "retry_api_exceptions"
+  layer_description   = "Layer for retrying API calls in Lambda functions"
+  layer_architectures = ["x86_64"]
+  layer_runtimes      = ["python3.12"]
 }
