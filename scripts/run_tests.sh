@@ -2,7 +2,7 @@
 
 # Run unit tests
 echo "Running unit tests..."
-if ! pipenv run coverage run --source=layers -m unittest discover -s tests then;
+if ! pipenv run coverage run --source=layers -m unittest discover -s tests; then
     echo "Unit tests failed."
     exit 1
 fi
