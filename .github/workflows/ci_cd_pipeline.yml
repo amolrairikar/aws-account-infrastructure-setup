@@ -71,6 +71,10 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: build_lambda_layers
+    strategy:
+      matrix:
+        layers:
+          - name: get_train_status
     env:
       S3_STATE_BUCKET_NAME: ${{ secrets.S3_STATE_BUCKET_NAME }}
       TF_VAR_infra_role_arn: ${{ secrets.TF_VAR_infra_role_arn }}
@@ -82,10 +86,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download Lambda layer retry_api_exceptions zip artifact
+      - name: Download Lambda zip artifacts
         uses: actions/download-artifact@v4
         with:
-          name: retry_api_exceptions_lambda_layer_zip
+          name: ${{ matrix.layers.name }}_lambda_layer_zip
     
       - name: Set up AWS credentials (using OIDC)
         uses: aws-actions/configure-aws-credentials@v4
