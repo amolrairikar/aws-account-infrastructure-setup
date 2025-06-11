@@ -74,7 +74,7 @@ jobs:
     strategy:
       matrix:
         layers:
-          - name: get_train_status
+          - name: retry_api_exceptions
     env:
       S3_STATE_BUCKET_NAME: ${{ secrets.S3_STATE_BUCKET_NAME }}
       TF_VAR_infra_role_arn: ${{ secrets.TF_VAR_infra_role_arn }}
