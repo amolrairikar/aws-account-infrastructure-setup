@@ -64,6 +64,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "iam:CreateRole",
       "iam:DeleteRole",
       "iam:GetRole",
+      "iam:PassRole",
       "iam:TagRole",
       "iam:UntagRole",
       "iam:UpdateAssumeRolePolicy",
@@ -115,7 +116,12 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:PublishLayerVersion",
       "lambda:DeleteLayerVersion",
       "lambda:AddLayerVersionPermission",
-      "lambda:RemoveLayerVersionPermission"
+      "lambda:RemoveLayerVersionPermission",
+      "lambda:ListEventSourceMappings",
+      "lambda:GetEventSourceMapping",
+      "lambda:CreateEventSourceMapping",
+      "lambda:UpdateEventSourceMapping",
+      "lambda:DeleteEventSourceMapping"
     ]
     resources = ["*"]
   }
@@ -177,6 +183,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "sqs:DeleteQueue",
       "sqs:GetQueueAttributes",
       "sqs:SetQueueAttributes",
+      "sqs:ListQueueTags",
       "sqs:TagQueue",
       "sqs:UntagQueue"
     ]
