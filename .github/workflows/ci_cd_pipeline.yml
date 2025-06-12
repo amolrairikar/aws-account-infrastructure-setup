@@ -41,7 +41,6 @@ jobs:
       matrix:
         layers:
           - name: retry_api_exceptions
-            layer_file: retry_api_exceptions.py
             path: layers/retry_api_exceptions
 
     steps:
@@ -58,8 +57,8 @@ jobs:
 
       - name: Build Lambda layer package
         run: |
-          chmod +x ./scripts/build_lambda_package.sh
-          ./scripts/build_lambda_package.sh "${{ matrix.layers.name }}" "${{ matrix.layers.layer_file }}" "${{ matrix.layers.path }}"
+          chmod +x ./scripts/build_lambda_layer_package.sh
+          ./scripts/build_lambda_layer_package.sh "${{ matrix.layers.name }}" "${{ matrix.layers.path }}"
 
       - name: Upload Lambda layer zip as artifact
         uses: actions/upload-artifact@v4
