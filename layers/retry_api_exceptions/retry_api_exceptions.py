@@ -12,7 +12,8 @@ def is_retryable_exception(e: botocore.exceptions.ClientError | requests.excepti
     """Checks if the returned exception is retryable."""
     if isinstance(e, botocore.exceptions.ClientError):
         return e.response['Error']['Code'] in [
-            'InternalServerError'
+            'InternalServerError',
+            'RequestThrottled'
         ]
     elif isinstance(e, requests.exceptions.HTTPError):
         return e.response.status_code in [
