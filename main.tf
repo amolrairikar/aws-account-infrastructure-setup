@@ -89,7 +89,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "iam:ListOpenIDConnectProviderTags",
       "iam:GetOpenIDConnectProvider",
       "iam:CreateOpenIDConnectProvider",
-      "iam:TagOpenIDConnectProvider"
+      "iam:TagOpenIDConnectProvider",
+      "iam:ListInstanceProfilesForRole"
     ]
     resources = ["*"]
   }
