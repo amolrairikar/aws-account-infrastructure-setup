@@ -63,20 +63,36 @@ jobs:
       - name: Upload Lambda layer zip as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.layers.name }}_lambda_layer_zip
+          name: lambda-layer-${{ matrix.layers.name }}
           path: ${{ matrix.layers.path }}/${{ matrix.layers.name }}.zip
+
+  combine_artifacts:
+    runs-on: ubuntu-latest
+    needs: build_lambda_layers
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: combined-artifacts
+
+      - name: Move ZIPs to root
+        run: |
+          mkdir combined-zips
+          find combined-artifacts -name '*.zip' -exec mv {} combined-zips/ \;
+
+      - name: Upload combined artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-lambdas
+          path: combined-zips/
 
   deploy_infrastructure:
 
     runs-on: ubuntu-latest
-    needs: build_lambda_layers
-    strategy:
-      matrix:
-        layers:
-          - name: retry_api_exceptions
+    needs: combine_artifacts
     env:
       S3_STATE_BUCKET_NAME: ${{ secrets.S3_STATE_BUCKET_NAME }}
-      TF_VAR_infra_role_arn: ${{ secrets.TF_VAR_infra_role_arn }}
+      TF_VAR_infra_role_arn: ${{ secrets.TF_VAR_INFRA_ROLE_ARN  }}
       TF_VAR_email: ${{ secrets.EMAIL }}
       TF_VAR_environment: "prod"
       TF_VAR_project_name: "accountSetup"
@@ -88,7 +104,8 @@ jobs:
       - name: Download Lambda zip artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.layers.name }}_lambda_layer_zip
+          name: all-lambdas
+          path: .
     
       - name: Set up AWS credentials (using OIDC)
         uses: aws-actions/configure-aws-credentials@v4
