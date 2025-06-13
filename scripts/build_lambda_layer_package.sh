@@ -30,6 +30,6 @@ find "$SOURCE_PATH" -maxdepth 1 -name "*.py" -exec cp {} "$PYTHON_DIR/" \;
 
 echo "📦 Creating layer ZIP: $ZIP_PATH"
 cd "$LAYER_BUILD_DIR"
-zip -r -X "$ZIP_PATH" python > /dev/null
+zip -r "$ZIP_PATH" python > /dev/null
 
 echo "✅ Lambda layer package created at: $ZIP_PATH"

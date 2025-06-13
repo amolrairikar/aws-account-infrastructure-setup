@@ -362,6 +362,17 @@ resource "aws_cloudtrail" "management_event_trail" {
   }
 }
 
+module "code_bucket" {
+  source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
+  bucket_name       = "lambda-source-code-${data.aws_caller_identity.current.account_id}-bucket"
+  account_number    = data.aws_caller_identity.current.account_id
+  environment       = var.environment
+  project           = var.project_name
+  versioning_status = "Enabled"
+  enable_acl        = false
+  object_ownership  = "BucketOwnerEnforced"
+}
+
 module "retry_api_call_layer" {
   source              = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/lambda-layer?ref=main"
   layer_filename      = "retry_api_exceptions.zip"

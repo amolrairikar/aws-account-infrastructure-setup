@@ -55,16 +55,6 @@ jobs:
       - name: Install zip
         run: sudo apt-get update && sudo apt-get install -y zip
 
-      - name: Freeze dependencies
-        run: |
-          cd ${{ matrix.layers.path }}
-          pip install pipenv
-          pipenv lock
-          pipenv requirements > requirements.txt
-
-      - name: View requirements.txt
-        run: cat ${{ matrix.layers.path }}/requirements.txt
-
       - name: Build Lambda layer package
         run: |
           chmod +x ./scripts/build_lambda_layer_package.sh
