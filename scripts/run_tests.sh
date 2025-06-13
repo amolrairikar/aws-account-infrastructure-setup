@@ -2,8 +2,12 @@
 
 set -e
 
+SOURCE_DIRECTORY=$1
+
+# TODO: Add files to omit
+
 echo "Running unit tests..."
-if ! pipenv run coverage run --source=lambdas -m unittest discover -s tests/unit -v; then
+if ! pipenv run coverage run --source=$SOURCE_DIRECTORY -m unittest discover -s tests/unit -v; then
     echo "Unit tests failed!"
     exit 1
 fi
@@ -13,7 +17,7 @@ COMPONENT_TEST_DIR="tests/component"
 
 if [ -d "$COMPONENT_TEST_DIR" ] && [ "$(find "$COMPONENT_TEST_DIR" -type f -name "*.py" | wc -l)" -gt 0 ]; then
     echo "Running component tests..."
-    if ! pipenv run coverage run --source=lambdas -m unittest discover -s "$COMPONENT_TEST_DIR" -v; then
+    if ! pipenv run coverage run --source=$SOURCE_DIRECTORY -m unittest discover -s "$COMPONENT_TEST_DIR" -v; then
         echo "Component tests failed!"
         exit 1
     fi
@@ -26,6 +30,6 @@ else
 fi
 
 echo "Generating coverage report..."
-pipenv run coverage report --omit=lambdas/write_train_lines/retry_api_exceptions.py --fail-under=80
+pipenv run coverage report --fail-under=80
 
 echo "Test execution complete!"
