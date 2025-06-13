@@ -75,6 +75,9 @@ jobs:
         with:
           path: combined-artifacts
 
+      - name: View files in combined-artifacts directory
+        run: ls -la combined-artifacts
+
       - name: Move ZIPs to combined folder
         run: |
           mkdir combined-zips
