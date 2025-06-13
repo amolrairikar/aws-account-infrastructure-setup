@@ -364,7 +364,7 @@ resource "aws_cloudtrail" "management_event_trail" {
 
 module "code_bucket" {
   source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
-  bucket_name       = "source-code-${data.aws_caller_identity.current.account_id}-bucket"
+  bucket_name       = "lambda-source-code-${data.aws_caller_identity.current.account_id}-bucket"
   account_number    = data.aws_caller_identity.current.account_id
   environment       = var.environment
   project           = var.project_name
