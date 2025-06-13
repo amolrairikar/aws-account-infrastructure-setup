@@ -1,3 +1,0 @@
-backoff
-boto3
-requests
