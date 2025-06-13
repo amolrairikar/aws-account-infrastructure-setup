@@ -3,8 +3,15 @@
 set -e
 
 SOURCE_DIRECTORY=$1
+OMIT_LIST=$2
 
-# TODO: Add files to omit
+OMIT_ARGS=""
+if [ -n "$OMIT_LIST" ]; then
+    IFS=',' read -ra OMIT_ARRAY <<< "$OMIT_LIST"
+    for ITEM in "${OMIT_ARRAY[@]}"; do
+        OMIT_ARGS+="--omit=$ITEM "
+    done
+fi
 
 echo "Running unit tests..."
 if ! pipenv run coverage run --source=$SOURCE_DIRECTORY -m unittest discover -s tests/unit -v; then
@@ -30,6 +37,6 @@ else
 fi
 
 echo "Generating coverage report..."
-pipenv run coverage report --fail-under=80
+pipenv run coverage report $OMIT_ARGS --fail-under=80
 
 echo "Test execution complete!"
