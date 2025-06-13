@@ -2,8 +2,32 @@
 
 set -e
 
-SOURCE_DIRECTORY=$1
-OMIT_LIST=$2
+SOURCE_DIRECTORY=""
+OMIT_LIST=""
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        --source)
+            SOURCE_DIRECTORY="$2"
+            shift 2
+            ;;
+        --omit)
+            OMIT_LIST="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 --source <source_directory> [--omit <comma_separated_paths_to_omit_from_test_coverage>]"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "$SOURCE_DIRECTORY" ]; then
+    echo "Error: --source is required"
+    exit 1
+fi
 
 OMIT_ARGS=""
 if [ -n "$OMIT_LIST" ]; then
@@ -38,5 +62,4 @@ fi
 
 echo "Generating coverage report..."
 pipenv run coverage report $OMIT_ARGS --fail-under=80
-
 echo "Test execution complete!"
