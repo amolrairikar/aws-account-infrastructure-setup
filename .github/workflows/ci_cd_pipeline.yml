@@ -99,8 +99,7 @@ jobs:
       TF_VAR_email: ${{ secrets.EMAIL }}
       TF_VAR_environment: "prod"
       TF_VAR_project_name: "accountSetup"
-      TF_VAR_account_number: ${{ secrets.AWS_ACCOUNT_NUMBER }}
-      TF_VAR_aws_region: "us-east-2"
+      TF_VAR_aws_region_name: "us-east-2"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -129,7 +128,7 @@ jobs:
           terraform init \
             -backend-config="bucket=${S3_STATE_BUCKET_NAME}" \
             -backend-config="key=account-setup/terraform.tfstate" \
-            -backend-config="region=us-east-2" \
+            -backend-config="region=${TF_VAR_aws_region}" \
             -backend-config="assume_role={role_arn=\"${TF_VAR_infra_role_arn}\", session_name=\"terraform-session\"}"
 
       - name: Plan Terraform

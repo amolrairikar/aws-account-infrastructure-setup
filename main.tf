@@ -10,13 +10,15 @@ provider "aws" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     effect  = "Allow"
     principals {
       type        = "Federated"
-      identifiers = ["arn:aws:iam::${var.account_number}:oidc-provider/token.actions.githubusercontent.com"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"]
     }
     condition {
       test = "StringEquals"
@@ -41,7 +43,7 @@ data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
     effect  = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:sts::${var.account_number}:assumed-role/infra-role/GitHubActions"]
+      identifiers = ["arn:aws:sts::${data.aws_caller_identity.current.account_id}:assumed-role/infra-role/GitHubActions"]
     }
   }
 }
@@ -238,7 +240,7 @@ module "terraform_role" {
 locals {
   lambda_arns = [
     for name in var.lambda_function_names :
-    "arn:aws:lambda:${var.aws_region}:${var.account_number}:function:${name}"
+    "arn:aws:lambda:${var.aws_region_name}:${data.aws_caller_identity.current.account_id}:function:${name}"
   ]
 }
 
@@ -292,8 +294,8 @@ module "sns_email_subscription" {
 
 module "cloudtrail_bucket" {
   source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
-  bucket_name       = "aws-cloudtrail-logs-${var.account_number}-659b67ac"
-  account_number    = var.account_number
+  bucket_name       = "aws-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-659b67ac"
+  account_number    = data.aws_caller_identity.current.account_id
   environment       = var.environment
   project           = var.project_name
   versioning_status = "Disabled"
@@ -301,8 +303,6 @@ module "cloudtrail_bucket" {
   bucket_acl        = "private"
   object_ownership  = "BucketOwnerPreferred"
 }
-
-data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket_policy" "cloudtrail" {
   bucket = module.cloudtrail_bucket.bucket_id
