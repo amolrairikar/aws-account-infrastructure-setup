@@ -75,7 +75,7 @@ jobs:
         with:
           path: combined-artifacts
 
-      - name: Move ZIPs to root
+      - name: Move ZIPs to combined folder
         run: |
           mkdir combined-zips
           find combined-artifacts -name '*.zip' -exec mv {} combined-zips/ \;
@@ -106,6 +106,9 @@ jobs:
         with:
           name: all-lambdas
           path: .
+
+      - name: View files in root directory
+        run: ls -la
     
       - name: Set up AWS credentials (using OIDC)
         uses: aws-actions/configure-aws-credentials@v4
