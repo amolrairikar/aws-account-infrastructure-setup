@@ -31,7 +31,7 @@ jobs:
         run: chmod +x scripts/run_tests.sh
 
       - name: Run unit and component tests
-        run: ./scripts/run_tests.sh
+        run: ./scripts/run_tests.sh layers
 
   build_lambda_layers:
 
