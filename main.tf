@@ -235,6 +235,42 @@ module "terraform_role" {
   project                   = var.project_name
 }
 
+locals {
+  lambda_arns = [
+    for name in var.lambda_function_names :
+    "arn:aws:lambda:${var.aws_region}:${var.account_number}:function:${name}"
+  ]
+}
+
+data "aws_iam_policy_document" "eventbridge_trust_relationship_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["scheduler.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "eventbridge_role_inline_policy_document" {
+  statement {
+    effect    = "Allow"
+    actions   = ["lambda:InvokeFunction"]
+    resources = local.lambda_arns
+  }
+}
+
+module "eventbridge_role" {
+  source                    = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/iam-role?ref=main"
+  role_name                 = "eventbridge-role"
+  trust_relationship_policy = data.aws_iam_policy_document.eventbridge_trust_relationship_policy.json
+  inline_policy             = data.aws_iam_policy_document.eventbridge_role_inline_policy_document.json
+  inline_policy_description = "Policy for EventBridge Scheduler to invoke Lambda functions"
+  environment               = var.environment
+  project                   = var.project_name
+}
+
 resource "aws_iam_openid_connect_provider" "github_oidc_provider" {
   url = "https://token.actions.githubusercontent.com"
   client_id_list = [
