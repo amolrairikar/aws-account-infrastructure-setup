@@ -79,7 +79,12 @@ jobs:
         run: |
           chmod +x ./scripts/build_lambda_layer_package.sh
           ./scripts/build_lambda_layer_package.sh "${{ matrix.layers.name }}" "${{ matrix.layers.path }}"
-          aws s3 cp "${{ matrix.layers.path }}/${{ matrix.layers.name }}.zip" s3://${{ secrets.S3_CODE_BUCKET_NAME }}/${{ matrix.layers.name }}.zip
+
+      - name: Upload Lambda layer to S3
+        if: steps.detect_layer_change.outputs.changed == 'true'
+        run: |
+          aws s3 cp "${{ matrix.layers.path }}/${{ matrix.layers.name }}.zip" \
+            s3://${{ secrets.S3_CODE_BUCKET_NAME }}/${{ matrix.layers.name }}.zip
 
   deploy_infrastructure:
 
