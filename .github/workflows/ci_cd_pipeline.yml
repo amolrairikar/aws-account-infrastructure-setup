@@ -58,7 +58,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.TF_VAR_INFRA_ROLE_ARN }}
-          aws-region: 'us-east-2'
+          aws-region: "us-east-2"
 
       - name: Install zip
         run: sudo apt-get update && sudo apt-get install -y zip
@@ -105,7 +105,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.TF_VAR_INFRA_ROLE_ARN }}
-          aws-region: 'us-east-2'
+          aws-region: "us-east-2"
       
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
