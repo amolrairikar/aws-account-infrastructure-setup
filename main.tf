@@ -136,6 +136,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:DeleteBucket",
       "s3:PutBucketTagging",
       "s3:GetBucketTagging",
+      "s3:GetObjectTagging",
       "s3:PutBucketVersioning",
       "s3:GetBucketVersioning",
       "s3:PutBucketPublicAccessBlock",
