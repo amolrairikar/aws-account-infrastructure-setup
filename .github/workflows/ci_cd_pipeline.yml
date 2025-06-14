@@ -47,12 +47,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Set up AWS credentials (using OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.TF_VAR_INFRA_ROLE_ARN }}
+          aws-region: 'us-east-2'
 
       - name: Install zip
         run: sudo apt-get update && sudo apt-get install -y zip
