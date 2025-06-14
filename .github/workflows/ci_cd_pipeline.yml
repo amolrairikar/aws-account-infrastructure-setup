@@ -58,8 +58,8 @@ jobs:
       - name: Check if layer folder changed
         id: detect_layer_change
         run: |
-          chmod +x ./scripts/detect_layer_change.sh
-          ./scripts/detect_layer_change.sh "${{ matrix.layers.path }}" "${{ github.event_name }}" "${{ github.base_ref }}" || CHANGED=$?
+          chmod +x ./scripts/detect_lambda_changes.sh
+          ./scripts/detect_lambda_changes.sh "${{ matrix.layers.path }}" "${{ github.event_name }}" "${{ github.base_ref }}" || CHANGED=$?
           if [[ "$CHANGED" -eq 1 ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
