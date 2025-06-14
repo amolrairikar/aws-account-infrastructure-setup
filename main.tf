@@ -144,6 +144,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:PutBucketNotification",
       "s3:GetBucketNotification",
       "s3:GetObject",
+      "s3:GetObjectVersion",
       "s3:PutObject",
       "s3:ListBucket",
       "s3:GetBucketPolicy",
