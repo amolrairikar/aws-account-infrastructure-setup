@@ -159,6 +159,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:GetBucketRequestPayment",
       "s3:GetBucketLogging",
       "s3:GetLifecycleConfiguration",
+      "s3:PutLifecycleConfiguration",
       "s3:GetReplicationConfiguration",
       "s3:GetEncryptionConfiguration",
       "s3:GetBucketObjectLockConfiguration"
@@ -373,6 +374,18 @@ module "code_bucket" {
   versioning_status = "Enabled"
   enable_acl        = false
   object_ownership  = "BucketOwnerEnforced"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "code_bucket_lifecycle_config" {
+  bucket = module.code_bucket.bucket_id
+
+  rule {
+    id      = "Expire old code artifacts"
+    status  = "Enabled"
+    noncurrent_version_expiration {
+      noncurrent_days = 7
+    }
+  }
 }
 
 data aws_s3_object "retry_api_exceptions_zip" {
