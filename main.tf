@@ -243,6 +243,11 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   }
   statement {
     effect    = "Allow"
+    actions   = ["cloudtrail:DescribeTrails"]
+    resources = ["*"]
+  }
+  statement {
+    effect    = "Allow"
     actions   = [
       "dynamodb:ListTables",
       "dynamodb:DescribeTable",
