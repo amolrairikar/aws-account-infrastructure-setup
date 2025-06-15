@@ -61,7 +61,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     resources = [
       "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-app-eventbridge-scheduler",
       "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-lambda-trigger",
-      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines-eventbridge-scheduler",
       "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines-lambda-trigger"
     ]
   }
@@ -118,8 +117,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:GetPolicy",
       "lambda:ListVersionsByFunction",
       "lambda:GetFunctionCodeSigningConfig",
-      "lambda:ListEventSourceMappings",
-      "lambda:GetEventSourceMapping",
       "lambda:CreateEventSourceMapping",
       "lambda:UpdateEventSourceMapping",
       "lambda:DeleteEventSourceMapping"
@@ -130,8 +127,17 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status-lambda",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines",
-      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-train-tracker-analytics-lambda-trigger-queue",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:event-source-mapping:*"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "lambda:ListEventSourceMappings",
+      "lambda:GetEventSourceMapping"
+    ]
+    resources = [
+      "*"
     ]
   }
   statement {
