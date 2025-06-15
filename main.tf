@@ -59,7 +59,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "scheduler:ListSchedules"
     ]
     resources = [
-      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-app-eventbridge-scheduler",
       "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-lambda-trigger",
       "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines-lambda-trigger"
     ]
@@ -123,10 +122,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     resources = [
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-etl",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-listening-history",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status-lambda",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:event-source-mapping:*"
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:event-source-mapping:64f2fba8-d90f-4b76-876f-8874fb80985e"
     ]
   }
   statement {
@@ -240,7 +238,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "sqs:UntagQueue"
     ]
     resources = [
-      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-train-tracker-analytics-lambda-trigger-queue",
       "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-trigger-get-train-status"
     ]
   }
