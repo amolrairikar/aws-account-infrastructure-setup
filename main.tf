@@ -60,9 +60,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
     resources = [
       "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-app-eventbridge-scheduler",
-      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-app",
+      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-lambda-trigger",
       "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines-eventbridge-scheduler",
-      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines"
+      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines-lambda-trigger"
     ]
   }
   statement {
