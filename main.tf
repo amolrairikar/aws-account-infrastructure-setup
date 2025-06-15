@@ -58,7 +58,12 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "scheduler:GetSchedule",
       "scheduler:ListSchedules"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-app-eventbridge-scheduler",
+      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/spotify-listening-history-app",
+      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines-eventbridge-scheduler",
+      "arn:aws:scheduler:us-east-2:${data.aws_caller_identity.current.account_id}:schedule/default/cta-write-train-lines"
+    ]
   }
   statement {
     effect    = "Allow"
@@ -127,7 +132,14 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:UpdateEventSourceMapping",
       "lambda:DeleteEventSourceMapping"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-etl",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-listening-history",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status-lambda",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions:*"
+    ]
   }
   statement {
     effect    = "Allow"
@@ -164,7 +176,16 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:GetEncryptionConfiguration",
       "s3:GetBucketObjectLockConfiguration"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:s3:::aws-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-659b67ac",
+      "arn:aws:s3:::aws-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-659b67ac/*",
+      "arn:aws:s3:::lambda-source-code-${data.aws_caller_identity.current.account_id}-bucket",
+      "arn:aws:s3:::lambda-source-code-${data.aws_caller_identity.current.account_id}-bucket/*",
+      "arn:aws:s3:::spotify-listening-history-app-data-lake-${data.aws_caller_identity.current.account_id}-prod",
+      "arn:aws:s3:::spotify-listening-history-app-data-lake-${data.aws_caller_identity.current.account_id}-prod/*",
+      "arn:aws:s3:::terraform-state-bucket-${data.aws_caller_identity.current.account_id}-prod",
+      "arn:aws:s3:::terraform-state-bucket-${data.aws_caller_identity.current.account_id}-prod/*"
+    ]
   }
   statement {
     effect    = "Allow"
@@ -181,7 +202,10 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "sns:SetSubscriptionAttributes",
       "sns:ListTagsForResource"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:sns:us-east-2:${data.aws_caller_identity.current.account_id}:lambda-failure-notification-topic",
+      "arn:aws:sns:us-east-2:${data.aws_caller_identity.current.account_id}:lambda-failure-notification-topic:0e548f80-3d8a-4efb-9e65-8e3840395091"
+    ]
   }
   statement {
     effect    = "Allow"
@@ -194,7 +218,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "sqs:TagQueue",
       "sqs:UntagQueue"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-train-tracker-analytics-lambda-trigger-queue"
+    ]
   }
   statement {
     effect    = "Allow"
@@ -211,7 +237,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "cloudtrail:AddTags",
       "cloudtrail:ListTags"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:cloudtrail:us-east-2:${data.aws_caller_identity.current.account_id}:trail/management-events-trail"
+    ]
   }
   statement {
     effect    = "Allow"
@@ -227,7 +255,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "dynamodb:UntagResource",
       "dynamodb:ListTagsOfResource"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:dynamodb:us-east-2:${data.aws_caller_identity.current.account_id}:table/cta-train-tracker-location-application-data"
+    ]
   }
 }
 
