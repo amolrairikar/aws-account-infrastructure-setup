@@ -117,7 +117,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:GetPolicy",
       "lambda:ListVersionsByFunction",
       "lambda:GetFunctionCodeSigningConfig",
-      "lambda:CreateEventSourceMapping",
       "lambda:UpdateEventSourceMapping",
       "lambda:DeleteEventSourceMapping"
     ]
@@ -134,7 +133,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     effect    = "Allow"
     actions   = [
       "lambda:ListEventSourceMappings",
-      "lambda:GetEventSourceMapping"
+      "lambda:GetEventSourceMapping",
+      "lambda:CreateEventSourceMapping"
     ]
     resources = [
       "*"
