@@ -234,7 +234,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
     resources = [
       "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-train-tracker-analytics-lambda-trigger-queue",
-      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-queue-trigger-write-train-lines"
+      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-trigger-get-train-status"
     ]
   }
   statement {
