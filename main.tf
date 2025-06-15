@@ -230,7 +230,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "cloudtrail:DeleteTrail",
       "cloudtrail:GetTrail",
       "cloudtrail:GetTrailStatus",
-      "cloudtrail:DescribeTrails",
       "cloudtrail:StartLogging",
       "cloudtrail:StopLogging",
       "cloudtrail:PutEventSelectors",
