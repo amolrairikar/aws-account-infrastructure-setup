@@ -129,7 +129,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-listening-history",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status-lambda",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines"
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines",
+      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-train-tracker-analytics-lambda-trigger-queue",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:event-source-mapping:a8a8bad5-3ff5-4934-92fc-6bc2ff1ed4d0"
     ]
   }
   statement {
@@ -232,7 +234,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "sqs:UntagQueue"
     ]
     resources = [
-      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-train-tracker-analytics-lambda-trigger-queue"
+      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-train-tracker-analytics-lambda-trigger-queue",
+      "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-trigger-get-train-status"
     ]
   }
   statement {
