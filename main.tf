@@ -118,14 +118,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:GetPolicy",
       "lambda:ListVersionsByFunction",
       "lambda:GetFunctionCodeSigningConfig",
-      "lambda:ListLayers",
-      "lambda:ListLayerVersions",
-      "lambda:GetLayerVersion",
-      "lambda:GetLayerVersionPolicy",
-      "lambda:PublishLayerVersion",
-      "lambda:DeleteLayerVersion",
-      "lambda:AddLayerVersionPermission",
-      "lambda:RemoveLayerVersionPermission",
       "lambda:ListEventSourceMappings",
       "lambda:GetEventSourceMapping",
       "lambda:CreateEventSourceMapping",
@@ -137,9 +129,30 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-listening-history",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status-lambda",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "lambda:ListLayers",
+      "lambda:ListLayerVersions",
+      "lambda:GetLayerVersion",
+      "lambda:GetLayerVersionPolicy",
+      "lambda:PublishLayerVersion",
+      "lambda:DeleteLayerVersion",
+      "lambda:AddLayerVersionPermission",
+      "lambda:RemoveLayerVersionPermission"
+    ]
+    resources = [
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions:*"
     ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = ["lambda:ListLayers"]
+    resources = ["*"]
   }
   statement {
     effect    = "Allow"
