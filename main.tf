@@ -52,10 +52,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "scheduler:CreateSchedule",
-      "scheduler:UpdateSchedule",
-      "scheduler:DeleteSchedule",
-      "scheduler:GetSchedule",
+      "scheduler:*Schedule",
       "scheduler:ListSchedules"
     ]
     resources = [
@@ -64,39 +61,18 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
   }
   statement {
-    effect    = "Allow"
-    actions   = [
-      "iam:CreateRole",
-      "iam:DeleteRole",
-      "iam:GetRole",
-      "iam:PassRole",
-      "iam:TagRole",
-      "iam:UntagRole",
-      "iam:UpdateAssumeRolePolicy",
-      "iam:PutRolePolicy",
-      "iam:DeleteRolePolicy",
-      "iam:CreatePolicy",
-      "iam:DeletePolicy",
-      "iam:GetPolicy",
-      "iam:GetPolicyVersion",
-      "iam:ListPolicyVersions",
-      "iam:TagPolicy",
-      "iam:UntagPolicy",
-      "iam:AttachRolePolicy",
-      "iam:DetachRolePolicy",
-      "iam:ListRolePolicies",
-      "iam:ListAttachedRolePolicies",
-      "iam:CreatePolicyVersion",
-      "iam:DeletePolicyVersion",
-      "iam:ListOpenIDConnectProviders",
-      "iam:ListOpenIDConnectProviderTags",
-      "iam:GetOpenIDConnectProvider",
-      "iam:CreateOpenIDConnectProvider",
-      "iam:TagOpenIDConnectProvider",
-      "iam:ListInstanceProfilesForRole"
-    ]
-    resources = ["*"]
-  }
+  effect    = "Allow"
+  actions   = [
+    "iam:*Role",
+    "iam:PassRole",
+    "iam:*RolePolicy",
+    "iam:*Policy",
+    "iam:*PolicyVersion",
+    "iam:*OpenIDConnectProvider",
+    "iam:ListInstanceProfilesForRole"
+  ]
+  resources = ["*"]
+}
   statement {
     effect    = "Allow"
     actions   = [
@@ -116,23 +92,18 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:GetPolicy",
       "lambda:ListVersionsByFunction",
       "lambda:GetFunctionCodeSigningConfig",
-      "lambda:UpdateEventSourceMapping",
-      "lambda:DeleteEventSourceMapping"
     ]
     resources = [
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-etl",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-listening-history",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:event-source-mapping:64f2fba8-d90f-4b76-876f-8874fb80985e"
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines"
     ]
   }
   statement {
     effect    = "Allow"
     actions   = [
-      "lambda:ListEventSourceMappings",
-      "lambda:GetEventSourceMapping",
-      "lambda:CreateEventSourceMapping"
+      "lambda:*EventSourceMapping"
     ]
     resources = [
       "*"
@@ -141,14 +112,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "lambda:ListLayers",
-      "lambda:ListLayerVersions",
-      "lambda:GetLayerVersion",
-      "lambda:GetLayerVersionPolicy",
-      "lambda:PublishLayerVersion",
-      "lambda:DeleteLayerVersion",
-      "lambda:AddLayerVersionPermission",
-      "lambda:RemoveLayerVersionPermission"
+      "lambda:*LayerVersion"
     ]
     resources = [
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions",
@@ -244,16 +208,10 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "cloudtrail:CreateTrail",
-      "cloudtrail:UpdateTrail",
-      "cloudtrail:DeleteTrail",
-      "cloudtrail:GetTrail",
-      "cloudtrail:GetTrailStatus",
-      "cloudtrail:StartLogging",
-      "cloudtrail:StopLogging",
+      "cloudtrail:*Trail",
+      "cloudtrail:*Logging",
       "cloudtrail:PutEventSelectors",
-      "cloudtrail:AddTags",
-      "cloudtrail:ListTags"
+      "cloudtrail:*Tags"
     ]
     resources = [
       "arn:aws:cloudtrail:us-east-2:${data.aws_caller_identity.current.account_id}:trail/management-events-trail"
@@ -280,6 +238,25 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
     resources = [
       "arn:aws:dynamodb:us-east-2:${data.aws_caller_identity.current.account_id}:table/cta-train-tracker-location-application-data"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "dynamodb:ListTables"
+    ]
+    resources = [
+      "*"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "logs:*LogGroup",
+      "logs:*Resource"
+    ]
+    resources = [
+      "*"
     ]
   }
 }
