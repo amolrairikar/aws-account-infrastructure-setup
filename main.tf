@@ -64,11 +64,15 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   effect    = "Allow"
   actions   = [
     "iam:*Role",
-    "iam:PassRole",
     "iam:*RolePolicy",
+    "iam:*RolePolicies",
     "iam:*Policy",
     "iam:*PolicyVersion",
     "iam:*OpenIDConnectProvider",
+    "iam:PassRole",
+    "iam:ListPolicyVersions",
+    "iam:ListOpenIDConnectProviders",
+    "iam:ListOpenIDConnectProviderTags",
     "iam:ListInstanceProfilesForRole"
   ]
   resources = ["*"]
@@ -103,7 +107,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "lambda:*EventSourceMapping"
+      "lambda:*EventSourceMapping",
+      "lambda:ListEventSourceMappings"
     ]
     resources = [
       "*"
@@ -112,7 +117,11 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "lambda:*LayerVersion"
+      "lambda:*LayerVersion",
+      "lambda:*LayerVersionPermission",
+      "lambda:ListLayers",
+      "lambda:ListLayerVersions",
+      "lambda:GetLayerVersionPolicy"
     ]
     resources = [
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions",
@@ -210,8 +219,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     actions   = [
       "cloudtrail:*Trail",
       "cloudtrail:*Logging",
+      "cloudtrail:*Tags",
       "cloudtrail:PutEventSelectors",
-      "cloudtrail:*Tags"
+      "cloudtrail:GetTrailStatus"
     ]
     resources = [
       "arn:aws:cloudtrail:us-east-2:${data.aws_caller_identity.current.account_id}:trail/management-events-trail"
