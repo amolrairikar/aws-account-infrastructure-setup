@@ -267,7 +267,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "logs:*RetentionPolicy"
     ]
     resources = [
-      "/aws/lambda/*"
+      "arn:aws:logs:us-east-2:203918855457:log-group:/aws/lambda/*"
     ]
   }
   statement {
