@@ -263,7 +263,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     effect    = "Allow"
     actions   = [
       "logs:*LogGroup",
-      "logs:*LogGroups",
+      "logs:DescribeLogGroups",
       "logs:*Resource"
     ]
     resources = [
