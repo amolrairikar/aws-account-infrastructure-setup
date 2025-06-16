@@ -87,7 +87,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "lambda:GetFunction",
       "lambda:TagResource",
       "lambda:UntagResource",
-      "lambda:ListTags",
       "lambda:PutFunctionEventInvokeConfig",
       "lambda:DeleteFunctionEventInvokeConfig",
       "lambda:GetFunctionEventInvokeConfig",
@@ -108,7 +107,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     effect    = "Allow"
     actions   = [
       "lambda:*EventSourceMapping",
-      "lambda:ListEventSourceMappings"
+      "lambda:ListEventSourceMappings",
+      "lambda:ListTags"
     ]
     resources = [
       "*"
