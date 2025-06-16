@@ -263,8 +263,17 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     effect    = "Allow"
     actions   = [
       "logs:*LogGroup",
-      "logs:DescribeLogGroups",
-      "logs:*Resource"
+      "logs:*Resource",
+      "logs:*RetentionPolicy"
+    ]
+    resources = [
+      "/aws/lambda/*"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "logs:DescribeLogGroups"
     ]
     resources = [
       "*"
