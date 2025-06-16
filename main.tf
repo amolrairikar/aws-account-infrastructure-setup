@@ -68,6 +68,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     "iam:*RolePolicy",
     "iam:*Policy",
     "iam:*PolicyVersion",
+    "iam:ListRolePolicies",
     "iam:*OpenIDConnectProvider",
     "iam:ListInstanceProfilesForRole"
   ]
@@ -112,7 +113,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "lambda:*LayerVersion"
+      "lambda:*LayerVersion",
+      "lambda:*LayerVersions"
     ]
     resources = [
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions",
