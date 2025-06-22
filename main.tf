@@ -171,6 +171,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     resources = [
       "arn:aws:s3:::aws-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-659b67ac",
       "arn:aws:s3:::aws-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-659b67ac/*",
+      "arn:aws:s3:::cta-train-analytics-app-data-lake-${data.aws_caller_identity.current.account_id}-prod",
+      "arn:aws:s3:::cta-train-analytics-app-data-lake-${data.aws_caller_identity.current.account_id}-prod/*",
       "arn:aws:s3:::lambda-source-code-${data.aws_caller_identity.current.account_id}-bucket",
       "arn:aws:s3:::lambda-source-code-${data.aws_caller_identity.current.account_id}-bucket/*",
       "arn:aws:s3:::spotify-listening-history-app-data-lake-${data.aws_caller_identity.current.account_id}-prod",
