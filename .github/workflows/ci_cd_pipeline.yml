@@ -32,9 +32,6 @@ jobs:
           pipenv run coverage run --source=layers -m unittest discover -s tests/unit -v
           pipenv run coverage report --fail-under=80
 
-      - name: Run unit and component tests
-        run: ./scripts/run_tests.sh --source layers
-
   build_lambda_layers:
 
     runs-on: ubuntu-latest
