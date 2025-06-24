@@ -12,18 +12,28 @@ provider "aws" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 module "terraform_state_bucket" {
-  source         = "../modules/s3-bucket-private"
-  bucket_prefix  = "terraform-state-bucket"
-  account_number = var.account_number
-  environment    = "prod"
-  project        = "accountSetup"
+  source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
+  bucket_name       = "terraform-state-bucket-${data.aws_caller_identity.current.account_id}-prod"
+  account_number    = data.aws_caller_identity.current.account_id
+  environment       = "prod"
+  project           = "accountSetup"
+  versioning_status = "Enabled"
+  enable_acl        = false
+  object_ownership  = "BucketOwnerEnforced"
 }
 
-output "s3_bucket_name" {
-  value = module.terraform_state_bucket.bucket_id
-}
+resource "aws_s3_bucket_lifecycle_configuration" "terraform_bucket_lifecycle_config" {
+  bucket = module.terraform_state_bucket.bucket_id
 
-output "s3_bucket_arn" {
-  value = module.terraform_state_bucket.bucket_arn
+  rule {
+    id      = "Expire old Terraform state files"
+    status  = "Enabled"
+    filter {}
+    noncurrent_version_expiration {
+      noncurrent_days = 45
+    }
+  }
 }
