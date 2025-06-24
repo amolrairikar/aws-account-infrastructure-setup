@@ -31,7 +31,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "terraform_bucket_lifecycle_con
   rule {
     id      = "Expire old Terraform state files"
     status  = "Enabled"
-    filter {}
+    filter {
+      prefix = ""
+    }
     noncurrent_version_expiration {
       noncurrent_days = 45
     }
