@@ -434,7 +434,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "code_bucket_lifecycle_config" 
   rule {
     id      = "Expire old code artifacts"
     status  = "Enabled"
-    filter {}
+    filter {
+      prefix = ""
+    }
     noncurrent_version_expiration {
       noncurrent_days = 7
     }
