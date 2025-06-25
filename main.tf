@@ -278,6 +278,16 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
+      "glue:TagResource",
+      "glue:UntagResource"
+    ]
+    resources = [
+      "*"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
       "firehose:*DeliveryStream"
     ]
     resources = [
