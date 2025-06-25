@@ -24,7 +24,7 @@ variable "aws_region_name" {
 }
 
 variable "lambda_function_names" {
-  description = "The names of all Lambda functions in the account"
+  description = "The names of all Lambda functions in the account that should be triggered by EventBridge Scheduler"
   type        = list(string)
   default     = [
     "spotify-etl",
