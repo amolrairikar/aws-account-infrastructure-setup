@@ -10,8 +10,10 @@ provider "aws" {
   }
 }
 
+# Data block that returns AWS account number
 data "aws_caller_identity" "current" {}
 
+# IAM policies + role definition for infra role used by Terraform
 data "aws_iam_policy_document" "infra_role_trust_relationship_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -151,6 +153,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "s3:GetObjectVersion",
       "s3:PutObject",
       "s3:ListBucket",
+      "s3:ListBucketMultipartUploads",
+      "s3:AbortMultipartUpload",
       "s3:GetBucketPolicy",
       "s3:PutBucketPolicy",
       "s3:GetBucketAcl",
@@ -237,25 +241,19 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "dynamodb:ListTables",
-      "dynamodb:DescribeTable",
-      "dynamodb:CreateTable",
-      "dynamodb:DeleteTable",
-      "dynamodb:DescribeTimeToLive",
-      "dynamodb:UpdateTimeToLive",
-      "dynamodb:DescribeContinuousBackups",
-      "dynamodb:TagResource",
-      "dynamodb:UntagResource",
-      "dynamodb:ListTagsOfResource"
+      "logs:*LogGroup",
+      "logs:*Resource",
+      "logs:*RetentionPolicy"
     ]
     resources = [
-      "arn:aws:dynamodb:us-east-2:${data.aws_caller_identity.current.account_id}:table/cta-train-tracker-location-application-data"
+      "arn:aws:logs:us-east-2:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/*",
+      "arn:aws:logs:us-east-2:${data.aws_caller_identity.current.account_id}:log-group:/aws/kinesisfirehose/*"
     ]
   }
   statement {
     effect    = "Allow"
     actions   = [
-      "dynamodb:ListTables"
+      "logs:DescribeLogGroups"
     ]
     resources = [
       "*"
@@ -264,18 +262,21 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "logs:*LogGroup",
-      "logs:*Resource",
-      "logs:*RetentionPolicy"
+      "glue:*Table",
+      "glue:*TableVersion",
+      "glue:*TableVersions",
+      "glue:*Database"
     ]
     resources = [
-      "arn:aws:logs:us-east-2:203918855457:log-group:/aws/lambda/*"
+      "arn:aws:glue:${var.aws_region_name}:${data.aws_caller_identity.current.account_id}:catalog",
+      "arn:aws:glue:${var.aws_region_name}:${data.aws_caller_identity.current.account_id}:database/*",
+      "arn:aws:glue:${var.aws_region_name}:${data.aws_caller_identity.current.account_id}:table/*"
     ]
   }
   statement {
     effect    = "Allow"
     actions   = [
-      "logs:DescribeLogGroups"
+      "firehose:*DeliveryStream"
     ]
     resources = [
       "*"
@@ -293,6 +294,7 @@ module "terraform_role" {
   project                   = var.project_name
 }
 
+# Create a list variable of Lambda ARNs for any Lambda that should be triggered by EventBridge
 locals {
   lambda_arns = [
     for name in var.lambda_function_names :
@@ -300,6 +302,7 @@ locals {
   ]
 }
 
+# IAM policies + role definition for role used by EventBridge
 data "aws_iam_policy_document" "eventbridge_trust_relationship_policy" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -329,6 +332,7 @@ module "eventbridge_role" {
   project                   = var.project_name
 }
 
+# OIDC provider for GitHub to allow GitHub Actions to authenticate without needing IAM access keys
 resource "aws_iam_openid_connect_provider" "github_oidc_provider" {
   url = "https://token.actions.githubusercontent.com"
   client_id_list = [
@@ -340,6 +344,7 @@ resource "aws_iam_openid_connect_provider" "github_oidc_provider" {
   }
 }
 
+# SNS subscription for all Lambda functions to send error notifications to
 module "sns_email_subscription" {
   source         = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/sns-email-subscription?ref=main"
   sns_topic_name = "lambda-failure-notification-topic"
@@ -348,6 +353,7 @@ module "sns_email_subscription" {
   project        = var.project_name
 }
 
+# S3 bucket + bucket policy for Cloudtrail bucket
 module "cloudtrail_bucket" {
   source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
   bucket_name       = "aws-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-659b67ac"
@@ -399,6 +405,7 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
   })
 }
 
+# Management event trail for Cloudtrail
 resource "aws_cloudtrail" "management_event_trail" {
   name                          = "management-events-trail"
   s3_bucket_name                = module.cloudtrail_bucket.bucket_id
@@ -417,6 +424,7 @@ resource "aws_cloudtrail" "management_event_trail" {
   }
 }
 
+# S3 bucket + lifecycle policy for bucket holding all Lambda/Lambda layer source code
 module "code_bucket" {
   source            = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/s3-bucket-private?ref=main"
   bucket_name       = "lambda-source-code-${data.aws_caller_identity.current.account_id}-bucket"
@@ -443,11 +451,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "code_bucket_lifecycle_config" 
   }
 }
 
+# ZIP file corresponding to Lambda layer source code for retry_api_exceptions layer
 data aws_s3_object "retry_api_exceptions_zip" {
   bucket = module.code_bucket.bucket_id
   key    = "retry_api_exceptions.zip"
 }
 
+# Deployment of Lambda layer for retry_api_exceptions layer
 module "retry_api_call_layer" {
   source              = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/lambda-layer?ref=main"
   layer_name          = "retry_api_exceptions"
@@ -457,4 +467,34 @@ module "retry_api_call_layer" {
   s3_bucket           = module.code_bucket.bucket_id
   s3_key              = "retry_api_exceptions.zip"
   s3_object_version   = data.aws_s3_object.retry_api_exceptions_zip.version_id
+}
+
+# IAM policies + role definition for role used by Kinesis Firehose
+data "aws_iam_policy_document" "firehose_trust_relationship_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["firehose.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "firehose_role_inline_policy_document" {
+  statement {
+    effect    = "Allow"
+    actions   = ["lambda:InvokeFunction"]
+    resources = local.lambda_arns
+  }
+}
+
+module "firehose_role" {
+  source                    = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/iam-role?ref=main"
+  role_name                 = "firehose-role"
+  trust_relationship_policy = data.aws_iam_policy_document.firehose_trust_relationship_policy.json
+  inline_policy             = data.aws_iam_policy_document.firehose_role_inline_policy_document.json
+  inline_policy_description = "Policy for Firehose role to create delivery streams"
+  environment               = var.environment
+  project                   = var.project_name
 }
