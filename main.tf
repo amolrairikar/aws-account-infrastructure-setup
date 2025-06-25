@@ -265,7 +265,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "glue:*Table",
       "glue:*TableVersion",
       "glue:*TableVersions",
-      "glue:*Database"
+      "glue:*Database",
+      "glue:TagResource",
+      "glue:UntagResource"
     ]
     resources = [
       "arn:aws:glue:${var.aws_region_name}:${data.aws_caller_identity.current.account_id}:catalog",
