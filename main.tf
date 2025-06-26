@@ -478,6 +478,17 @@ data "aws_iam_policy_document" "firehose_role_inline_policy_document" {
       "arn:aws:s3:::cta-train-analytics-app-data-lake-${data.aws_caller_identity.current.account_id}-prod",
     ]
   }
+  statement {
+    effect    = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = [
+      "arn:aws:logs:us-east-2:${data.aws_caller_identity.current.account_id}:log-group:/aws/firehose/*"
+    ]
+  }
 }
 
 module "firehose_role" {
