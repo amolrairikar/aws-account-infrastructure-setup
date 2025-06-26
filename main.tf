@@ -508,12 +508,3 @@ module "firehose_role" {
   environment               = var.environment
   project                   = var.project_name
 }
-
-resource "aws_glue_catalog_database" "glue_database" {
-  name = "${var.environment}_glue_catalog_database"
-
-  tags = {
-    environment = var.environment
-    project     = var.project_name
-  }
-}
