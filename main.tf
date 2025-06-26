@@ -235,7 +235,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     ]
     resources = [
       "arn:aws:logs:us-east-2:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/*",
-      "arn:aws:logs:us-east-2:${data.aws_caller_identity.current.account_id}:log-group:/aws/kinesisfirehose/*"
+      "arn:aws:logs:us-east-2:${data.aws_caller_identity.current.account_id}:log-group:/aws/kinesisfirehose/*",
+      "arn:aws:logs:us-east-2:${data.aws_caller_identity.current.account_id}:log-group:/aws/firehose/*"
     ]
   }
   statement {
