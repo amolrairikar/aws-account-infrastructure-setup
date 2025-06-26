@@ -453,7 +453,7 @@ data aws_s3_object "pyarrow_zip" {
 }
 
 # Deployment of Lambda layer for pyarrow layer
-module "retry_api_call_layer" {
+module "pyarrow_layer" {
   source              = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/lambda-layer?ref=main"
   layer_name          = "pyarrow_layer"
   layer_description   = "Layer for pyarrow"
