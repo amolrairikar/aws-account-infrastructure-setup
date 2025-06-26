@@ -263,7 +263,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "glue:GetTags",
     ]
     resources = [
-      "*"
+      "arn:aws:glue:${var.aws_region_name}:${data.aws_caller_identity.current.account_id}:database/prod_glue_catalog_database"
     ]
   }
 }
