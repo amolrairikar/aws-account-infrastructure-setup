@@ -135,36 +135,26 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "s3:CreateBucket",
-      "s3:DeleteBucket",
-      "s3:PutBucketTagging",
-      "s3:GetBucketTagging",
-      "s3:GetObjectTagging",
-      "s3:PutBucketVersioning",
-      "s3:GetBucketVersioning",
-      "s3:PutBucketPublicAccessBlock",
-      "s3:GetBucketPublicAccessBlock",
-      "s3:PutBucketNotification",
-      "s3:GetBucketNotification",
-      "s3:GetObject",
+      "s3:*Bucket",
+      "s3:*BucketTagging",
+      "s3:*ObjectTagging",
+      "s3:*BucketVersioning",
+      "s3:*BucketPublicAccessBlock",
+      "s3:*BucketNotification",
+      "s3:*Object",
       "s3:GetObjectVersion",
-      "s3:PutObject",
-      "s3:ListBucket",
       "s3:ListBucketMultipartUploads",
       "s3:AbortMultipartUpload",
-      "s3:GetBucketPolicy",
-      "s3:PutBucketPolicy",
-      "s3:GetBucketAcl",
+      "s3:*BucketPolicy",
+      "s3:*BucketAcl",
       "s3:PutBucketAcl",
-      "s3:GetBucketOwnershipControls",
-      "s3:PutBucketOwnershipControls",
+      "s3:*BucketOwnershipControls",
       "s3:GetBucketCORS",
       "s3:GetBucketWebsite",
       "s3:GetAccelerateConfiguration",
       "s3:GetBucketRequestPayment",
       "s3:GetBucketLogging",
-      "s3:GetLifecycleConfiguration",
-      "s3:PutLifecycleConfiguration",
+      "s3:*LifecycleConfiguration",
       "s3:GetReplicationConfiguration",
       "s3:GetEncryptionConfiguration",
       "s3:GetBucketObjectLockConfiguration"
@@ -254,6 +244,17 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     actions   = [
       "firehose:*DeliveryStream",
       "firehose:UpdateDestination"
+    ]
+    resources = [
+      "arn:aws:firehose:us-east-2:${data.aws_caller_identity.current.account_id}:deliverystream/cta-train-analytics-stream"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "glue:*Database",
+      "glue:*Resource",
+      "glue:GetTags",
     ]
     resources = [
       "*"
@@ -518,4 +519,14 @@ module "firehose_role" {
   inline_policy_description = "Policy for Firehose role to create delivery streams"
   environment               = var.environment
   project                   = var.project_name
+}
+
+# Provision Glue database to be used by all projects
+resource "aws_glue_catalog_database" "prod_glue_database" {
+  name = "${var.environment}_glue_catalog_database"
+
+  tags = {
+    environment = var.environment
+    project     = var.project_name
+  }
 }
