@@ -82,18 +82,14 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "lambda:CreateFunction",
+      "lambda:*Function",
       "lambda:UpdateFunctionCode",
       "lambda:UpdateFunctionConfiguration",
-      "lambda:DeleteFunction",
-      "lambda:GetFunction",
-      "lambda:TagResource",
-      "lambda:UntagResource",
+      "lambda:*Resource",
       "lambda:PutFunctionEventInvokeConfig",
       "lambda:DeleteFunctionEventInvokeConfig",
       "lambda:GetFunctionEventInvokeConfig",
-      "lambda:AddPermission",
-      "lambda:RemovePermission",
+      "lambda:*Permission",
       "lambda:GetPolicy",
       "lambda:ListVersionsByFunction",
       "lambda:GetFunctionCodeSigningConfig",
@@ -188,16 +184,12 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "sns:CreateTopic",
-      "sns:DeleteTopic",
-      "sns:GetTopicAttributes",
-      "sns:SetTopicAttributes",
-      "sns:TagResource",
-      "sns:UntagResource",
+      "sns:*Topic",
+      "sns:*TopicAttributes",
+      "sns:*Resource",
       "sns:Subscribe",
       "sns:Unsubscribe",
-      "sns:GetSubscriptionAttributes",
-      "sns:SetSubscriptionAttributes",
+      "sns:*SubscriptionAttributes",
       "sns:ListTagsForResource"
     ]
     resources = [
@@ -208,13 +200,9 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "sqs:CreateQueue",
-      "sqs:DeleteQueue",
-      "sqs:GetQueueAttributes",
-      "sqs:SetQueueAttributes",
-      "sqs:ListQueueTags",
-      "sqs:TagQueue",
-      "sqs:UntagQueue"
+      "sqs:*Queue",
+      "sqs:*QueueAttributes",
+      "sqs:ListQueueTags"
     ]
     resources = [
       "arn:aws:sqs:us-east-2:${data.aws_caller_identity.current.account_id}:cta-trigger-get-train-status"
@@ -254,30 +242,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
     effect    = "Allow"
     actions   = [
       "logs:DescribeLogGroups"
-    ]
-    resources = [
-      "*"
-    ]
-  }
-  statement {
-    effect    = "Allow"
-    actions   = [
-      "glue:*Table",
-      "glue:*TableVersion",
-      "glue:*TableVersions",
-      "glue:*Database",
-      "glue:TagResource",
-      "glue:UntagResource"
-    ]
-    resources = [
-      "*"
-    ]
-  }
-  statement {
-    effect    = "Allow"
-    actions   = [
-      "glue:*Resource",
-      "glue:GetTags"
     ]
     resources = [
       "*"
