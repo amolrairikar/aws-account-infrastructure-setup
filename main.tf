@@ -251,7 +251,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
   statement {
     effect    = "Allow"
     actions   = [
-      "firehose:*DeliveryStream"
+      "firehose:*DeliveryStream",
+      "firehose:UpdateDestination"
     ]
     resources = [
       "*"
