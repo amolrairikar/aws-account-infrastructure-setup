@@ -460,8 +460,23 @@ data "aws_iam_policy_document" "firehose_trust_relationship_policy" {
 data "aws_iam_policy_document" "firehose_role_inline_policy_document" {
   statement {
     effect    = "Allow"
-    actions   = ["lambda:InvokeFunction"]
-    resources = local.lambda_arns
+    actions   = [
+      "s3:PutObject",
+      "s3:PutObjectAcl",
+      "s3:GetBucketLocation"
+    ]
+    resources = [
+      "arn:aws:s3:::cta-train-analytics-app-data-lake-${data.aws_caller_identity.current.account_id}-prod/raw/*"
+    ]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::cta-train-analytics-app-data-lake-${data.aws_caller_identity.current.account_id}-prod",
+    ]
   }
 }
 
