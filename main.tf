@@ -255,17 +255,6 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "arn:aws:firehose:us-east-2:${data.aws_caller_identity.current.account_id}:deliverystream/cta-train-analytics-stream"
     ]
   }
-  statement {
-    effect    = "Allow"
-    actions   = [
-      "glue:*Database",
-      "glue:*Resource",
-      "glue:GetTags",
-    ]
-    resources = [
-      "arn:aws:glue:${var.aws_region_name}:${data.aws_caller_identity.current.account_id}:database/prod_glue_catalog_database"
-    ]
-  }
 }
 
 module "terraform_role" {
