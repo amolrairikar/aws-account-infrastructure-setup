@@ -526,13 +526,3 @@ module "firehose_role" {
   environment               = var.environment
   project                   = var.project_name
 }
-
-# Provision Glue database to be used by all projects
-resource "aws_glue_catalog_database" "prod_glue_database" {
-  name = "${var.environment}_glue_catalog_database"
-
-  tags = {
-    environment = var.environment
-    project     = var.project_name
-  }
-}
