@@ -131,9 +131,7 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:retry_api_exceptions:*",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:pyarrow_layer",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:pyarrow_layer:*",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:awswrangler_layer",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:awswrangler_layer:*"
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:layer:pyarrow_layer:*"
     ]
   }
   statement {
@@ -461,24 +459,6 @@ module "pyarrow_layer" {
   s3_bucket           = module.code_bucket.bucket_id
   s3_key              = "pyarrow.zip"
   s3_object_version   = data.aws_s3_object.pyarrow_zip.version_id
-}
-
-# ZIP file corresponding to Lambda layer source code for awswrangler layer
-data aws_s3_object "awswrangler_zip" {
-  bucket = module.code_bucket.bucket_id
-  key    = "awswrangler.zip"
-}
-
-# Deployment of Lambda layer for pyarrow layer
-module "awswrangler_layer" {
-  source              = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/lambda-layer?ref=main"
-  layer_name          = "awswrangler_layer"
-  layer_description   = "Layer for awswrangler"
-  layer_architectures = ["x86_64"]
-  layer_runtimes      = ["python3.12"]
-  s3_bucket           = module.code_bucket.bucket_id
-  s3_key              = "awswrangler.zip"
-  s3_object_version   = data.aws_s3_object.awswrangler_zip.version_id
 }
 
 # IAM policies + role definition for role used by Kinesis Firehose
