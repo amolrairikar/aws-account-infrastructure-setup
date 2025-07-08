@@ -470,7 +470,7 @@ data aws_s3_object "awswrangler_zip" {
 }
 
 # Deployment of Lambda layer for pyarrow layer
-module "pyarrow_layer" {
+module "awswrangler_layer" {
   source              = "git::https://github.com/amolrairikar/aws-account-infrastructure.git//modules/lambda-layer?ref=main"
   layer_name          = "awswrangler_layer"
   layer_description   = "Layer for awswrangler"
