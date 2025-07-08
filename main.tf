@@ -104,7 +104,8 @@ data "aws_iam_policy_document" "infra_role_inline_policy_document" {
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-etl",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:spotify-listening-history",
       "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-get-train-status",
-      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines"
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-write-train-lines",
+      "arn:aws:lambda:us-east-2:${data.aws_caller_identity.current.account_id}:function:cta-bucket-raw-data"
     ]
   }
   statement {
