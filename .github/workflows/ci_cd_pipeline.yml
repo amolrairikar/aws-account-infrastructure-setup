@@ -43,6 +43,8 @@ jobs:
             path: layers/retry_api_exceptions
           - name: pyarrow
             path: layers/pyarrow
+          - name: awswrangler
+            path: layers/awswrangler
 
     steps:
       - name: Checkout code

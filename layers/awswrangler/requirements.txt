@@ -1,0 +1,2 @@
+# Only need to specify awswrangler in this file
+awswrangler
